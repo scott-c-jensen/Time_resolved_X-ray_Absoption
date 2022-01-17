@@ -12,10 +12,11 @@ Scott Jensen
 import numpy as np
 import matplotlib.pyplot as plt  
 import scipy.signal as sci
-#from scipy.interpolate import UnivariateSpline
+from scipy import stats
+
 import h5py
 import scottLib as sl
-import lmfit
+
 
 def AlignData(dataList, scatterList, flashList):
     """
@@ -48,6 +49,32 @@ def AlignData(dataList, scatterList, flashList):
     
 def sumData(array):
     return(np.array(array).sum(axis = 0))
+
+def bkgLinear(x, y, windows, returnBkg=False):
+
+    """
+    Finds and removes the linear background
+    x, y: data as arrays
+    windows: non-overlapping sets of x values as endpoints to take the background from
+        For example windows = [[start,stop][start2, stop2]]
+    returnBkg: bool option to return background
+    outputs bkg subtracted data
+    """
+    x=np.asarray(x)
+    y=np.asarray(y)
+    xNew = np.array([])
+    yNew = np.array([])
+    for win in windows:
+        idxUse = np.array([i for i, val in enumerate(x) if (val>=np.min(win) and val<=np.max(win))])
+        xNew=np.concatenate((xNew, x[idxUse]))
+        yNew=np.concatenate((yNew, y[idxUse]))
+    slope, intercept, r_value, p_value, std_err = stats.linregress(xNew,yNew)
+    bkg = slope*x +intercept
+    yOut = y - bkg
+    if returnBkg ==True:
+        return(yOut, bkg)
+    else:
+        return(yOut)
     
 def bkgSubtract(Data, flashTimes):
     """
@@ -65,9 +92,9 @@ def bkgSubtract(Data, flashTimes):
     for i,flashT in enumerate(flashTimes):
         idxStart, idxEnd = flashT-15000, flashT+25000
         if i==2:
-            bkgSubData[idxStart:idxEnd] = sl.bkgLinear(np.arange(len(Data[idxStart:idxEnd])), Data[idxStart:idxEnd], bkgRange)
+            bkgSubData[idxStart:idxEnd] = bkgLinear(np.arange(len(Data[idxStart:idxEnd])), Data[idxStart:idxEnd], bkgRange)
         else:
-            bkgSubData[idxStart:idxEnd] = sl.bkgLinear(np.arange(len(Data[idxStart:idxEnd])), Data[idxStart:idxEnd], bkgRange2)
+            bkgSubData[idxStart:idxEnd] = bkgLinear(np.arange(len(Data[idxStart:idxEnd])), Data[idxStart:idxEnd], bkgRange2)
 
     return(bkgSubData)
 
@@ -111,6 +138,21 @@ def getLinearBkg(xIn, yIn, idxStart, idxStop):
        
     linFit = np.polyfit(xtemp, ytemp, 1)
     return (linFit)
+
+def rebin (xIn, yIn, start, stop, step, interp = 11):
+    """Takes in x, y data and rebins the data through linear interpolation
+    xIn,yIn: arrays of data
+    start,stop,step: x start stop values and bin sizes after rebinning
+    interp: number of surrounding values to use during interpolation
+    returns rebinned data"""
+    if interp%2==0:
+        raise Exception('Interpolation number not odd')
+        
+    halfStep = step/float(interp)*(interp-1)/2.
+    xInterp =(start-halfStep, stop+halfStep, step/interp)
+    yInterp = np.interp(xInterp, xIn, yIn)
+    yOut = np.reshape(yInterp,(-1,interp)).sum(axis=-1)
+    return(np.arange(start,stop,step),yOut)
     
 def getKineticData (xIn, yIn, start, stop, step):
     """
@@ -126,14 +168,13 @@ def getKineticData (xIn, yIn, start, stop, step):
         print ('This is yOffset before setting to zero: {}').format(yData[0])
     else:
         start = start+1 #offset so the us where the sample was hit is not included
-        xData, yData = sl.rebin (xIn, yIn, start, stop, step)
+        xData, yData = rebin (xIn, yIn, start, stop, step)
     xData = xData-start
     yData = yData -np.mean(yIn[start-zeroDataAverage:start-1])
     xData[0] = 0
     yData[0] = 0
     
     return(xData,yData)
-    
     
 def addWeights(xTrace, usWeightRange, var, weightFactor):
     """Gets weights for fitting the data
@@ -146,7 +187,6 @@ def addWeights(xTrace, usWeightRange, var, weightFactor):
     weightList = lowRange+highRange
     return weightList
 
-    
 def getVar(oldX, inputData, varStart, varEnd, step):
     """gets the variance for the data
     oldX: range of x values
@@ -157,10 +197,9 @@ def getVar(oldX, inputData, varStart, varEnd, step):
     if step ==1:
         var = np.var(inputData[varStart:varEnd])
     else:
-        _, binY = sl.rebin(oldX, inputData, varStart, varEnd, step)
+        _, binY = rebin(oldX, inputData, varStart, varEnd, step)
         var = np.var(binY)
     return var
-
     
 def plotList(listIn):
     """Plots the data in listIn
