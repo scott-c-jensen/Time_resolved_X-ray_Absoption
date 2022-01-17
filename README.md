@@ -1,4 +1,5 @@
 # Time-Resolved X-ray Absoption Spectroscopy - Data Analysis
+This is a data analysis including multivariate non-linear fitting from a project in 2018.
 
 ## Experimental Setup in Brief
 I was looking at the changes in Photosystem II in spinach to understand the Kok cycle. **Basically what do plants do with the light and store it's energy during photosynthesis.** We examined this using x-ray absorption of the Manganese atoms which are central to this process.
