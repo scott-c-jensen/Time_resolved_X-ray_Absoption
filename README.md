@@ -16,6 +16,8 @@ The program is stored in two libraries (one for data handling and one for fittin
 Python 2.7.11  
 Numpy 1.11  
 LMFIT 0.98  
+h5py  
+scipy  
 
 ### More than you want to know on the state transitons
 We are looking at transitions between states, and while we know that we have a nearly pure starting state, there is incomplete advancement and uncertain kinetics to deal with. So each laser flash (of 5 total) creates a more complicated mixture of initial and final states. A fairly good approximation is to assume a single advancement percentage.
