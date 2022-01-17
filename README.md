@@ -8,7 +8,7 @@ PSII has 4 semi-stable states (S0-S3) which it goes through when illuminated by 
 ## Software Description
 This code base takes raw dectector data, recorded at 1MHz, and separates the data based on where laser flashed the sample which induced changes. The changes are extracted, background subtracted and combined. 
 
-The data are then fit in a way that may seem complicated because, frankly, the system is difficult to study. Basically 4 states exist. Changing states changes the signal (x-ray absorption). But this is convoluted further with imperfect advancement (see below for an large aside). However, the advancement is unknown so it is globally fit
+The data are then fit in a way that may seem complicated because, frankly, the system is difficult to study. Basically 4 states exist. Changing states changes the signal (x-ray absorption). But this is convoluted further with imperfect advancement (see below for an large aside). However, the advancement is unknown so it is globally fit along with the kinetics (time and amplitude of changes) as they are the same in all transitions.
 
 ## Dependencies
 Python 2.7.11
