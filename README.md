@@ -10,6 +10,8 @@ This code base takes raw dectector data, recorded at 1MHz, and separates the dat
 
 The data are then fit in a way that may seem complicated because, frankly, the system is difficult to study. Basically 4 states exist. Changing states changes the signal (x-ray absorption). But this is convoluted further with imperfect advancement (see below for an large aside). However, the advancement is unknown so it is globally fit along with the kinetics (time and amplitude of changes) as they are the same in all transitions.
 
+The program is stored in two libraries (one for data handling and one for fitting) and run by the controller.
+
 ## Dependencies  
 Python 2.7.11  
 Numpy 1.11  
