@@ -27,9 +27,9 @@ F1 = 20% S1, 80% S2
 
 But what we are looking at is the change in absorption... so we only care about the changes. So if we make a matrix for the S-state transitions for each flash, such as the first transition S1 to S2 (or S1-S2). This can be written for each flash as an array [S0-S1,S1-S2,S2-S3,S3-S0]:  
 
-1F = [   0, 0.80,   0.,   0.,]  
-2F = [   0, 0.16, 0.64,   0.,]  
-3F = [   0, 0.03, 0.26, 0.51,]  
+1F = [0.00, 0.80, 0.00, 0.00,]  
+2F = [0.00, 0.16, 0.64, 0.00,]  
+3F = [0.00, 0.03, 0.26, 0.51,]  
 4F = [0.41, 0.01, 0.08, 0.31,]  
 5F = [0.33, 0.33, 0.02, 0.12,]  
 
