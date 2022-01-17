@@ -1,4 +1,4 @@
-# Time_resolved_X-ray_Absoption
+# Time-Resolved X-ray Absoption Spectroscopy - Data Analysis
 
 ## Experimental Setup in Brief
 I was looking at the changes in Photosystem II in spinach to understand the Kok cycle. **Basically what do plants do with the light and store it's energy during photosynthesis.** We examined this using x-ray absorption of the Manganese atoms which are central to this process.
@@ -10,10 +10,10 @@ This code base takes raw dectector data, recorded at 1MHz, and separates the dat
 
 The data are then fit in a way that may seem complicated because, frankly, the system is difficult to study. Basically 4 states exist. Changing states changes the signal (x-ray absorption). But this is convoluted further with imperfect advancement (see below for an large aside). However, the advancement is unknown so it is globally fit along with the kinetics (time and amplitude of changes) as they are the same in all transitions.
 
-## Dependencies
-Python 2.7.11
-Numpy 1.11
-LMFIT 0.98
+## Dependencies  
+Python 2.7.11  
+Numpy 1.11  
+LMFIT 0.98  
 
 ### More than you want to know on the state transitons
 We are looking at transitions between states, and while we know that we have a nearly pure starting state, there is incomplete advancement and uncertain kinetics to deal with. So each laser flash (of 5 total) creates a more complicated mixture of initial and final states. A fairly good approximation is to assume a single advancement percentage.
